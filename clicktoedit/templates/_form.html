@@ -1,0 +1,25 @@
+ {% load widget_tweaks %}
+
+{% for field in form %}
+<div class="field">    
+  {{field|add_label_class:"label "}}
+  <div class="control">
+    {{ field|add_class:"input"|add_error_class:"is-danger" }}
+  </div>
+  <div class="help is-danger">
+    {{field.errors}}
+  </div>
+  <p class="help">
+      {{field.help_text}}
+    </p>
+</div>
+
+
+{% endfor %} 
+
+
+{% if form.non_field_errors %}
+  <p class="help is-danger">
+    {{ form.non_field_errors }}
+   </p>
+{% endif %}
