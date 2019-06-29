@@ -5,9 +5,18 @@
 {% if messages %}
 <div class="pb-s">
     {% for message in messages %}
-    <div id="not{{forloop.counter}}" class="notification  {% if message.tags %} is-{{ message.tags }}{% endif %}">
-          <button ic-target="#not{{forloop.counter}}" ic-action="remove" class="delete"></button>
-        {{ message }}
+    <div id="not{{forloop.counter}}" class="message is-small  {% if message.tags %} is-{{ message.tags }}{% endif %}">
+
+        <div class="message-header">
+        <p>Message</p>
+    
+          <button class="delete is-small"  ic-target="#not{{forloop.counter}}" ic-action="remove" aria-label="delete"></button>
+      </div>
+        
+          <div class="message-body">
+            {{ message }}  
+          </div>
+        
     </div>
     {% endfor %}
     </div>

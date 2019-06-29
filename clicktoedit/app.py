@@ -84,7 +84,8 @@ def update(request, id):
             resp = HttpResponse("")
             resp["X-IC-Redirect"]= "/"
             return resp
-
+        else:
+            messages.error(request,"error")
         context.update({'form': f})
     return render(request, "form.html", context)
 
