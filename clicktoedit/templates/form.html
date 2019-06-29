@@ -1,0 +1,32 @@
+
+ 
+
+<h1 class="subtitle">
+
+{% if post %}
+Update Post {{post.id}}
+{% else %}
+Create post
+{% endif %}
+</h1>
+       
+
+       <form action="" method="POST">
+          {% csrf_token %}
+         {% include "_form.html" %}
+             <div class="control">
+                <button class="button is-primary" 
+                    ic-post-to="{% url 'create' %}{% if post %}?id={{post.id}}{% endif %}"
+                    ic-target="#main"
+                >
+                    <span>
+                    Submit
+                    </span>
+                    <span  style="display:none" id="spin"  class="icon">
+                            <i class=" fas fa-spinner fa-pulse ic-use-transition"></i>
+                        </span>
+                </button>
+                <a  class="button is-text" href="{% url 'index' %}"> Cancel</a>
+            </div>
+
+       </form>

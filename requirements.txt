@@ -1,0 +1,2 @@
+git+https://github.com/zodman/django-micro@fix_messages
+django-widget-tweaks

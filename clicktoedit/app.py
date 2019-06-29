@@ -5,9 +5,21 @@ from django_micro import get_app_label
 from django_micro import route
 from django_micro import configure, route, run
 from django.shortcuts import render, redirect
+from django.views.generic import ListView, TemplateView
 from django.contrib import messages
+from django.http import HttpResponse
 import os
 from django import forms
+
+from django.contrib.messages import constants as msg
+
+MESSAGE_TAGS = {
+    msg.ERROR: 'danger',
+    msg.SUCCESS: 'success',
+    msg.WARNING: 'warning',
+    msg.INFO: 'info'
+}
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
@@ -38,9 +50,24 @@ class Post(models.Model):
         ordering = ('-create_date',)
 
 
+class ListPost(ListView):
+    template_name = "list.html"
+    model = Post
+
+route("list/", ListPost.as_view(), name="list")
+
+class Index(ListView):
+    template_name="base.html"
+    model = Post
+
+route("", Index.as_view(), name="index")
+
+class Messages(TemplateView):
+    template_name="messages.html"
+route("messages/", Messages.as_view(), name="messages")
 
 
-@route('', name='homepage')
+@route('create', name='create')
 def create(request):
     context = {}
     PostForm = forms.modelform_factory(Post, fields="__all__")
@@ -53,24 +80,30 @@ def create(request):
         post_form = PostForm()
 
     if request.POST:
+        msg="created"
         if id:
             post_form = PostForm(request.POST, instance=post)
+            msg="updated"
         else:
             post_form = PostForm(request.POST)
 
         if post_form.is_valid():
             post = post_form.save()
-            messages.success(request, f"post {post.id} created")
-            return redirect(f"/?id={post.id}")
+            messages.success(request, f"post {post.id} {msg}")
+            url =f"/"
+            r = HttpResponse("")
+            r["X-IC-Redirect"]= url
+            return r
         else:
-            messages.error(request, f"error in form")
+            messages.error(request, f"Error in form")
      
     context = {
         'form': post_form,
         'request':request,
+        'post':post,
     }
     #messages.info(request, "aaaa")
-    return render(request, "index.html", context)
+    return render(request, "form.html", context)
 
 admin.site.register(Post)
 

@@ -1,0 +1,21 @@
+<table class="table is-fullwidth">
+<thead>
+    <th>id</th>
+    <th>title</th>
+    <th></th>
+</thead>
+<tbody>
+{% for obj in object_list %}
+
+    <tr>
+        <td>{{obj.id}}</td>
+        <td>{{obj.title}}</td>
+        <td>
+            <a ic-get-from="{% url 'create' %}?id={{obj.id}}" ic-target="#main">View </a>
+        </td>
+    </tr>
+
+{% endfor %}
+
+</tbody>
+</table>
