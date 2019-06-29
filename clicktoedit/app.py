@@ -5,7 +5,7 @@ from django_micro import get_app_label
 from django_micro import route
 from django_micro import configure, route, run
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, TemplateView
+from django.views.generic import *
 from django.contrib import messages
 from django.http import HttpResponse
 import os
@@ -39,6 +39,7 @@ INSTALLED_APPS=[
 
 configure(locals(), django_admin=True)
 
+#### MODELS
 
 class Post(models.Model):
     title = models.CharField(max_length=255, unique =True)
@@ -49,63 +50,65 @@ class Post(models.Model):
         app_label = get_app_label()
         ordering = ('-create_date',)
 
+admin.site.register(Post)
+route('admin/', admin.site.urls)
 
-class ListPost(ListView):
-    template_name = "list.html"
-    model = Post
-
-route("list/", ListPost.as_view(), name="list")
-
-class Index(ListView):
-    template_name="base.html"
-    model = Post
-
-route("", Index.as_view(), name="index")
+#### VIEWS
 
 class Messages(TemplateView):
     template_name="messages.html"
 route("messages/", Messages.as_view(), name="messages")
 
 
-@route('create', name='create')
-def create(request):
-    context = {}
+class ListPost(ListView):
+    template_name = "list.html"
+    model = Post
+route("list/", ListPost.as_view(), name="list")
+
+class Index(ListView):
+    template_name="base.html"
+    model = Post
+route("", Index.as_view(), name="index")
+
+
+@route("update/<int:id>/", name="update")
+def update(request, id):
     PostForm = forms.modelform_factory(Post, fields="__all__")
-    id = request.GET.get("id")
-    post = None
-    if id:
-        post = Post.objects.get(id=id)
-        post_form = PostForm(instance=post)
-    else:
-        post_form = PostForm()
-
+    post = Post.objects.get(id=id)
+    context={'post':post,'form' :PostForm(instance=post) }
     if request.POST:
-        msg="created"
-        if id:
-            post_form = PostForm(request.POST, instance=post)
-            msg="updated"
-        else:
-            post_form = PostForm(request.POST)
+        f = PostForm(request.POST, instance=post)
+        if f.is_valid():
+            post = f.save()
+            messages.info(request,"data updated")
+            resp = HttpResponse("")
+            resp["X-IC-Redirect"]= "/"
+            return resp
 
-        if post_form.is_valid():
-            post = post_form.save()
-            messages.success(request, f"post {post.id} {msg}")
-            url =f"/"
-            r = HttpResponse("")
-            r["X-IC-Redirect"]= url
-            return r
-        else:
-            messages.error(request, f"Error in form")
-     
-    context = {
-        'form': post_form,
-        'request':request,
-        'post':post,
-    }
-    #messages.info(request, "aaaa")
+        context.update({'form': f})
     return render(request, "form.html", context)
 
-admin.site.register(Post)
 
-route('admin/', admin.site.urls)
+
+@route("create",name="create")
+def create(request):
+    PostForm = forms.modelform_factory(Post, fields="__all__")
+    context = {'form': PostForm()}
+    if request.POST:
+        f = PostForm(request.POST)
+        if f.is_valid():
+            post = f.save()
+            messages.success(request, f"post {post.id} create")
+            resp = HttpResponse("")
+            resp["X-IC-Redirect"]= "/"
+            return resp
+        else:
+            messages.error(request, f"Error in form")
+        context = {'form':f}
+    return render(request, "form.html", context)
+    
+            
+
+
+
 application = run()

@@ -2,7 +2,7 @@
 <thead>
     <th>id</th>
     <th>title</th>
-    <th></th>
+    <th colspan="2"></th>
 </thead>
 <tbody>
 {% for obj in object_list %}
@@ -10,8 +10,9 @@
     <tr>
         <td>{{obj.id}}</td>
         <td>{{obj.title}}</td>
+        <td>{{obj.create_date}}</td>
         <td>
-            <a ic-get-from="{% url 'create' %}?id={{obj.id}}" ic-target="#main">View </a>
+            <a ic-get-from="{% url 'update' obj.id %}" ic-target="#main">View </a>
         </td>
     </tr>
 

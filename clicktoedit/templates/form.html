@@ -16,9 +16,15 @@ Create post
          {% include "_form.html" %}
              <div class="control">
                 <button class="button is-primary" 
-                    ic-post-to="{% url 'create' %}{% if post %}?id={{post.id}}{% endif %}"
+                    {% spaceless %}
+                    
+                    {% if  not post %}
+                    ic-post-to="{% url 'create' %}"
+                    {% else %}
+                    ic-post-to="{% url 'update'  post.id %}"
+                    {% endif %}
                     ic-target="#main"
-                >
+                    {% endspaceless %}>
                     <span>
                     Submit
                     </span>
