@@ -31,28 +31,7 @@
 
        <div id="main" >
         {% block content %}
-        
-        <div class="field is-grouped">      
-        <span class="control">
-              <button type="button" class="button is-info" 
-          ic-get-from="{% url 'create' %}"
-          ic-target="#main">
-          Add
-          </button>
-        
-        </span>  
-          <span class="control">
-          
-            <button class="button is-warning" 
-            ic-include="#formcontact"
-            ic-confirm="are you sure?"
-            ic-post-to="{% url 'delete' %}">
-            Delete checked
-            </button>
-
-          </span>
-          
-        </div>
+      
           {% include "list.html" %}
         {% endblock content %}          
        </div>

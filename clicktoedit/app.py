@@ -110,7 +110,7 @@ def create(request):
     
 @route("delete",name="delete")            
 def delete(request):
-    ids = request.POST .getlist("ids")
+    ids = request.POST.getlist("ids")
     if ids:
         Post.objects.filter(id__in = ids).delete()
         messages.info(request,"deleted!")
@@ -118,5 +118,12 @@ def delete(request):
     r["X-IC-Redirect"]="/"
     return r
 
+@route("search",name ="search")
+def search(request):
+    import time
+    # time.sleep(5)
+    search = request.POST.get("search")
+    posts = Post.objects.filter(title__icontains=search)
+    return render(request, "_list.html", {'object_list': posts})
 
 application = run()

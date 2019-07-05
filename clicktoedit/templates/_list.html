@@ -1,0 +1,19 @@
+
+{% for obj in object_list %}
+
+    <tr>
+        <td>
+            <input type="checkbox" name="ids" value="{{obj.id}}">
+        </td>
+        <td>{{obj.id}}</td>
+        <td>{{obj.title}}</td>
+        <td>{{obj.create_date}}</td>
+        <td>
+            <a ic-get-from="{% url 'update' obj.id %}" ic-target="#main">
+            
+            <i class="fas fa-info-circle"></i>
+             </a>
+        </td>
+    </tr>
+
+{% endfor %}
