@@ -1,13 +1,18 @@
+
+<form id="formcontact" >
 <table class="table is-fullwidth">
 <thead>
-    <th>id</th>
+    <th colspan="2">id</th>
     <th>title</th>
     <th colspan="2"></th>
 </thead>
-<tbody>
+<tbody id="list_contacts">
 {% for obj in object_list %}
 
     <tr>
+        <td>
+            <input type="checkbox" name="ids" value="{{obj.id}}">
+        </td>
         <td>{{obj.id}}</td>
         <td>{{obj.title}}</td>
         <td>{{obj.create_date}}</td>
@@ -20,3 +25,5 @@
 
 </tbody>
 </table>
+
+</form>

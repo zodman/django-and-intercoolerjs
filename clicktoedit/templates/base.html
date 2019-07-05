@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> Click to edit </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+        <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/cyborg/bulmaswatch.min.css">
+
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intercooler-js/1.2.2/intercooler.min.js"></script>
@@ -30,11 +32,27 @@
        <div id="main" >
         {% block content %}
         
-       <button type="button" class="button is-info"
-       ic-get-from="{% url 'create' %}"
-       ic-target="#main"
-       >Add</button>
+        <div class="field is-grouped">      
+        <span class="control">
+              <button type="button" class="button is-info" 
+          ic-get-from="{% url 'create' %}"
+          ic-target="#main">
+          Add
+          </button>
+        
+        </span>  
+          <span class="control">
+          
+            <button class="button is-warning" 
+            ic-include="#formcontact"
+            ic-confirm="are you sure?"
+            ic-post-to="{% url 'delete' %}">
+            Delete checked
+            </button>
 
+          </span>
+          
+        </div>
           {% include "list.html" %}
         {% endblock content %}          
        </div>

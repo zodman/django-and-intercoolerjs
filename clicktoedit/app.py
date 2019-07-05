@@ -108,8 +108,15 @@ def create(request):
         context = {'form':f}
     return render(request, "form.html", context)
     
-            
-
+@route("delete",name="delete")            
+def delete(request):
+    ids = request.POST .getlist("ids")
+    if ids:
+        Post.objects.filter(id__in = ids).delete()
+        messages.info(request,"deleted!")
+    r= HttpResponse("")
+    r["X-IC-Redirect"]="/"
+    return r
 
 
 application = run()
